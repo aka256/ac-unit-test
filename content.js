@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener(function (message, sender, callback) {
   if (message.functiontoInvoke == "onClick") {
-    var io = onClick();
+    var [io, problemName] = onClick();
     
     chrome.storage.sync.get({
       language: 'Java',
@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
           copy(createMSTest(io));
           break;
         case "Python3":
-          copy(createPyUnittest(io));
+          copy(createPyUnittest(io, problemName));
           break;
         case "Kotlin":
           copy(createJUnitKotlin(io));
@@ -30,6 +30,18 @@ function onClick(){
   var input = null;
   var output = null;
   var io = [];
+  var problemName;
+  
+  var h2Classes = $(".h2");
+  var title = $(h2Classes[0]).text();
+
+  title = title.replace("\n\t\t\t", "");
+
+  if(title.charAt(0).match("[A-Z]") !== null){
+    problemName = title.charAt(0).toLowerCase();
+  } else {
+    problemName = "";
+  }
 
   var sections = $("#task-statement section");
   for(var i = 0; i < sections.length; i++){
@@ -79,7 +91,7 @@ function onClick(){
     }
   }
 
-  return io;
+  return [io, problemName];
 }
 
 function createJUnit(io){
@@ -175,12 +187,12 @@ namespace AtCoder
   return text;
 }
 
-function createPyUnittest(io) {
+function createPyUnittest(io, problemName) {
   var text = 
 `import sys
 from io import StringIO
 import unittest
-from import resolve
+from `+ problemName +` import resolve
 
 class TestClass(unittest.TestCase):
   def assertIO(self, input, output):
