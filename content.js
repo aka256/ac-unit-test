@@ -63,9 +63,12 @@ function onClick(){
       }
 
       if(header.indexOf("入力例") == 0 || header.indexOf("Sample Input") == 0){
-        name = header.replace(/\s+/g, "_");
+        name = header.replace("入力例", "sample_input");
+        name = name.replace(/\s+/g, "_");
         input = example;
       }else if(header.indexOf("出力例") == 0 || header.indexOf("Sample Output") == 0){
+        name = header.replace("出力例", "sample_output");
+        name = name.replace(/\s+/g, "_");
         output = example;
       }
     }
